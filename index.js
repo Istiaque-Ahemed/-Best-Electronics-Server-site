@@ -23,12 +23,26 @@ async function run() {
         const usersCollection = database.collection("users")
 
 
-        // GET SERVICES API`
+        // GET PRODUCT API`
         app.get('/products', async (req, res) => {
             const cursor = productCollection.find({})
             const products = await cursor.toArray();
             res.send(products)
         })
+        // Get post api
+        app.post('/products', async (req, res) => {
+            const product = req.body;
+            const result = await productCollection.insertOne(product);
+            res.json(result)
+        })
+        //DELETE PRODUCT API
+        app.delete("/products/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await productCollection.deleteOne(query);
+            res.json(result);
+        })
+
         // GET SINGLE DATA
         app.get('/products/:id', async (req, res) => {
             const id = req.params.id;
